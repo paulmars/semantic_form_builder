@@ -1,5 +1,7 @@
 class SemanticFormBuilder < ActionView::Helpers::FormBuilder
   include SemanticFormHelper
+  include ActionView::Helpers::AssetTagHelper
+  include ActionView::Helpers::TagHelper
   
   def field_settings(method, options = {}, tag_value = nil)
     field_name = "#{@object_name}_#{method.to_s}"
@@ -67,13 +69,36 @@ class SemanticFormBuilder < ActionView::Helpers::FormBuilder
     field_name, label, options = field_settings(method, options.merge( :label => "&nbsp;"))
     wrapping("submit", field_name, label, super, options)
   end
+
+  def submit_big_button(method, options = {})
+    field_name, label, options = field_settings(method, options.merge( :label => "&nbsp;", :class => "semantic_form-big-button"))
+    submit_button = @template.submit_tag(method, options)
+    wrapping("submit", field_name, label, submit_button, options)
+  end
+
+  def submit_big_button_and_spinner(method, options = {})
+    options[:onclick] ||= ""
+    options[:onclick] = options[:onclick] + "Element.show('spinner');"
+    field_name, label, options = field_settings(method, options.merge( :label => "&nbsp;", :class => "semantic_form-big-button"))
+    submit_button = @template.submit_tag(method, options)
+    spinner = image_tag "spinner.gif", {:id => "spinner", :style => "display:none" }
+    wrapping("submit", nil, "", spinner+submit_button, options)
+  end
+  
+  def submit_and_spinner(submit_name, options = {})
+    options[:onclick] ||= ""
+    options[:onclick] = options[:onclick] + "Element.show('spinner');"
+    submit_button = @template.submit_tag(submit_name, options)
+    spinner = image_tag "spinner.gif", {:id => "spinner", :style => "display:none" }
+    wrapping("submit", nil, "", submit_button+spinner, options)
+  end
   
   def submit_and_cancel(submit_name, cancel_name, options = {})
     submit_button = @template.submit_tag(submit_name, options)
     cancel_button = @template.submit_tag(cancel_name, options)
     wrapping("submit", nil, "", submit_button+cancel_button, options)
   end
-  
+
   def radio_button_group(method, values, options = {})
     selections = []
     values.each do |value|
