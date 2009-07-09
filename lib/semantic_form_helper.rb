@@ -73,12 +73,12 @@ module SemanticFormHelper
     style = ""
     if args[0][:leftwidth]
       style = semantic_form_left_column_size(args[0][:leftwidth])
-      block_called_from_erb?(proc) ? concat(style) : content
+      block_called_from_erb?(proc) ? concat(style) : style
       args[0].delete([:leftwidth])
     end
     if args[0][:rightwidth]
       style = semantic_form_right_column_size(args[0][:rightwidth])
-      block_called_from_erb?(proc) ? concat(style) : content
+      block_called_from_erb?(proc) ? concat(style) : style
       args[0].delete([:rightwidth])
     end
     form_for(object_name, *args, &proc)
@@ -92,12 +92,12 @@ module SemanticFormHelper
     args[0][:html][:class] += "semantic_form"
     if args[0][:leftwidth]
       style = semantic_form_left_column_size(args[0][:leftwidth])
-      block_called_from_erb?(proc) ? concat(style) : content
+      block_called_from_erb?(proc) ? concat(style) : style
       args[0].delete([:leftwidth])
     end
     if args[0][:rightwidth]
       style = semantic_form_right_column_size(args[0][:rightwidth])
-      block_called_from_erb?(proc) ? concat(style) : content
+      block_called_from_erb?(proc) ? concat(style) : style
       args[0].delete([:rightwidth])
     end
     remote_form_for(object_name, *args, &proc)
